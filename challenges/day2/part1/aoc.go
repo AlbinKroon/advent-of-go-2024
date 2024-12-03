@@ -15,23 +15,18 @@ func Solve() string {
 	var result int
 	reports := parse()
 	for i := 0; i < len(reports); i++ {
-		isSafe := checkIfSafe(reports[i])
-		if isSafe {
+		if isSafe(reports[i]) {
 			result++
 		}
 	}
 	return strconv.Itoa(result)
 }
 
-func checkIfSafe(report []int) bool {
-	isSorted := checkIfSorted(report)
-	if isSorted {
-		return checkIfSafeDistance(report)
-	}
-	return false
+func isSafe(report []int) bool {
+	return isSorted(report) && isSafeDistance(report)
 }
 
-func checkIfSafeDistance(report []int) bool {
+func isSafeDistance(report []int) bool {
 	prevHeight := -1
 	for _, v := range report {
 		if prevHeight == -1 {
@@ -39,7 +34,7 @@ func checkIfSafeDistance(report []int) bool {
 			continue
 		}
 		diff := math.Abs(float64(prevHeight - v))
-		if diff < 1 || diff > 3 {
+		if !(1 <= diff && diff <= 3) {
 			return false
 		}
 		prevHeight = v
@@ -47,7 +42,7 @@ func checkIfSafeDistance(report []int) bool {
 	return true
 }
 
-func checkIfSorted(report []int) bool {
+func isSorted(report []int) bool {
 	if slices.IsSorted(report) {
 		return true
 	}
